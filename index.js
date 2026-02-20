@@ -11,6 +11,10 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(methodOverride('_method'));
 
+app.get("/", (req, res) => {
+  res.redirect("/products");
+});
+
 app.use(routes);
 
 dbConnection();
