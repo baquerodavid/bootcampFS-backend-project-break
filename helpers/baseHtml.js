@@ -1,4 +1,4 @@
-const navBar = require("./NavBar");
+const navBar = require("./navBar");
 const footer = require("./footer");
 
 function baseHtml(content) {
