@@ -1,11 +1,12 @@
 {
   "name": "bootcampfs-backend-project-break",
   "version": "1.0.0",
-  "description": "Documentación del proyecto: cómo poner en marcha la aplicación, las tecnologías que hemos usado, endpoints, etc. En definitiva, una documentación de nuestra API.",
+  "description": "Aplicación backend desarrollada con Node.js, Express, MongoDB Atlas para gestionar una tienda de ropa.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
