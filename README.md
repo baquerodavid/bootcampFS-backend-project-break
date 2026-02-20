@@ -1,258 +1,228 @@
-# Tienda de ropa
+# Project Break 2 (Backend) - Tienda de Ropa
 
-Vamos a montar una tienda de ropa con un catálogo de productos y un dashboard para el administrador. Los productos se guardarán en una base de datos de mongo en Atlas. Podemos usar como referencia el pdf [web_ejemplo.pdf](web_ejemplo.pdf) que contiene un ejemplo de cómo podría ser la interfaz de la tienda y el dashboard.
+Aplicación backend desarrollada con **Node.js + Express + MongoDB Atlas** para gestionar una tienda de ropa con:
+
+- Catálogo público (renderizado SSR con template literals)
+- Dashboard de administración
+- Subida de imágenes con Multer + Cloudinary
+
+---
 
 ## Índice
 
-  - [Estructura de archivos](#estructura-de-archivos)
-  - [Creación de base de datos](#creación-de-base-de-datos)
-  - [Creación del servidor](#creación-del-servidor)
-  - [Creación de modelos](#creación-de-modelos)
-  - [Creación de rutas](#creación-de-rutas)
-  - [Creación de controladores](#creación-de-controladores)
-  - [Despliegue](#despliegue)
-  - [Documentación](#documentación)
-  - [Bonus](#bonus)
-  - [Recursos](#recursos)
+- [Descripción](#descripción)
+- [Características](#características)
+- [Tecnologías utilizadas](#tecnologías-utilizadas)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Requisitos](#requisitos)
+- [Instalación](#instalación)
+- [Variables de entorno](#variables-de-entorno)
+- [Rutas principales](#rutas-principales)
+- [Modelo Product](#modelo-product)
+- [Subida de imágenes](#subida-de-imágenes)
+- [Notas técnicas](#notas-técnicas)
+- [Posibles mejoras futuras](#posibles-mejoras-futuras)
+- [Contexto del proyecto](#️contexto-del-proyecto)
 
-## Estructura de archivos
+---
 
-Vamos a crear la estructura de archivos que vamos a necesitar para el proyecto. 
+## Descripción
+
+Proyecto correspondiente al **Project Break 2** del Bootcamp de desarrollo web Full-Stack.
+
+La aplicación permite visualizar productos en un catálogo público y gestionarlos desde un panel de administración.
+
+El renderizado se realiza en el servidor (SSR) utilizando **template literals**, sin motor de plantillas externo.
+
+---
+
+## Características
+
+### Catálogo público
+
+- Listado de productos
+- Vista de detalle de producto
+
+### Dashboard (admin)
+
+- Listado de productos
+- Crear producto
+- Editar producto
+- Eliminar producto
+- Subida de imágenes a Cloudinary
+
+---
+
+## Tecnologías utilizadas
+
+- Node.js
+- Express
+- MongoDB Atlas
+- Mongoose
+- dotenv
+- method-override
+- multer
+- multer-storage-cloudinary
+- Cloudinary
+- HTML + CSS (SSR con template literals)
+
+---
+
+## Estructura del proyecto
 
 ```
 .
 ├── config
 │   ├── db.js
+│   └── cloudinary.js
 ├── controllers
-│   ├── productController.js
-│   └── authController.js (BONUS)
+│   └── productController.js
+├── helpers
+│   ├── baseHtml.js
+│   ├── navBar.js
+│   ├── footer.js
+│   ├── productCard.js
+│   ├── productDetails.js
+│   ├── newProduct.js
+│   └── editProduct.js
+├── middlewares
+│   └── uploadCloudinaryMiddleware.js
 ├── models
 │   └── Product.js
+├── public
+│   └── styles
+│       └── styles.css
 ├── routes
 │   └── productRoutes.js
-│   └── authRoutes.js (BONUS)
-├── middlewares (BONUS)
-│   └── authMiddleware.js
-├── helpers
-│   └── template.js
-│   └── getNavBar.js
-│   └── baseHtml.js
-└── index.js
-├── test (BONUS)
-│   └── productController.test.js
 ├── .env
+├── .gitignore
+├── index.js
 └── package.json
-
 ```
 
-### Características de los archivos
+---
 
-- `config/db.js`: Archivo que contendrá la configuración de la base de datos. Deberá conectarse a la base de datos de mongo en Atlas.
-- `controllers/productController.js`: Archivo que contendrá la lógica para manejar las solicitudes CRUD de los productos. Devolverá las respuestas en formato HTML.
-- `models/Product.js`: Archivo que contendrá la definición del esquema del producto utilizando Mongoose.
-- `routes/productRoutes.js`: Archivo que contendrá la definición de las rutas CRUD para los productos. Este llama a los métodos del controlador.
-- `index.js`: Archivo principal que iniciará el servidor Express. Importa las rutas y las usa. También tiene que estar configurado para servir archivos estáticos y para leer el body de las peticiones de formularios.
-- `.env`: Archivo que contendrá las variables de entorno. En este caso, la uri de la base de datos de Atlas o el puerto de la aplicación. Más adelante añadiremos más variables de entorno, como la palabra secreta para la sesión.
-- `package.json`: Archivo que contendrá las dependencias del proyecto. Crearemos un script para iniciar el servidor con node ("start": "node --watch index.js") o si lo preferís con nodemon ("dev": "nodemon index.js"). Si elegís esta última opción tendréis que instalar la dependencia como dependencia de desarrollo.
+## Requisitos
 
-**BONUS**
-- `controllers/authController.js`: Archivo que contendrá la lógica para manejar las solicitudes de autenticación.
-- `routes/authRoutes.js`: Archivo que contendrá la definición de las rutas para la autenticación. Este llama a los métodos del controlador.
-- `middlewares/authMiddleware.js`: Archivo que contendrá el middleware para comprobar si el usuario está autenticado. Este buscará la sesión del usuario y, si no la encuentra, redirigirá al formulario de login.
+- Node.js
+- Cuenta en MongoDB Atlas
+- Cuenta en Cloudinary
 
-## Creacíon de base de datos
+---
 
-Vamos a crear la base de datos en Atlas. Una vez creada la base de datos, copiamos la uri y la guardamos en el archivo .env 
+## Instalación
+
+1. Clonar el repositorio
+
 ```
-MONGO_URI=<uri_bd_atlas>
+npm install
 ```
 
-## Creación del servidor
+2. Crear archivo `.env` en la raíz del proyecto.
 
-Vamos a crear el servidor con express. 
-El servidor devolverá las vistas usando template literals. También necesitaremos leer el body de las peticiones tipo post. Como trabajaremos con formularios html, necesitaremos los middlewares `express.urlencoded`, `express.json` para leer el body de las peticiones.
+3. Ejecutar en desarrollo:
 
-El puerto en el que escuchará el servidor lo cargaremos desde el archivo .env usando `dotenv`.
-
-Creamos el archivo `index.js` y añadimos el código necesario para crear el servidor. Es el punto de inicio de nuestra API. 
-
-## Creación de modelo
-
-Vamos a crear el modelo de producto. El modelo de producto tendrá los siguientes campos:
-
-- Nombre
-- Descripción
-- Imagen
-- Categoría
-- Talla
-- Precio
-
-La categoría será un string que podrá ser "Camisetas", "Pantalones", "Zapatos", "Accesorios".
-
-La talla será un string que podrá ser "XS", "S", "M", "L", "XL".
-
-[Modelo y vista con enum](enum.md)
-
-
-## Subida de imagenes
-- Puedes utilizar Cloudinary como proveedor externo de almacenamiento.
-- Sube la imagen al panel de Cloudinary o mediante su API.
-- Copia la URL que te devuelve la plataforma.
-- Pega esa URL en el campo image del formulario o en el documento que guardes en la BBDD.
-
-Una vez guardada, esa ruta servirá como referencia cuando renderices la imagen en el navegador, sin necesidad de almacenar archivos en tu propio servidor.
-
-
-***RETO:***
-Si tienes tiempo y te apetece probar, puedes hacer la subida directamente a `cloudinary` con `multer`desde el backend. De esta manera se gestionará la subida desde la aplicación.
-[ejemplo de subida con multer a cloudinary](multerycloudinary.md)
-
-## Creación de rutas
-
-Vamos a crear las rutas CRUD para los productos.
-Las rutas deberían tener una estructura similar a esta:
-
-- GET /products: Devuelve todos los productos. Cada producto tendrá un enlace a su página de detalle.
-- GET /products/:productId: Devuelve el detalle de un producto.
-- GET /dashboard: Devuelve el dashboard del administrador. En el dashboard aparecerán todos los artículos que se hayan subido. Si clickamos en uno de ellos nos llevará a su página para poder actualizarlo o eliminarlo.
-- GET /dashboard/new: Devuelve el formulario para subir un artículo nuevo.
-- POST /dashboard: Crea un nuevo producto.
-- GET /dashboard/:productId: Devuelve el detalle de un producto en el dashboard.
-- GET /dashboard/:productId/edit: Devuelve el formulario para editar un producto.
-- PUT /dashboard/:productId: Actualiza un producto.
-- DELETE /dashboard/:productId/delete: Elimina un producto.
-
-## Creación de controladores
-
-A continuación crearemos el controlador de productos. Este controlador se dedicará a manejar las solicitudes CRUD de los productos. Devolverá las respuestas en formato HTML.
-Para ello, crearemos algunas funciones auxiliares que nos ayudarán a devolver las vistas con SSR.
-
-Las funciones principales del controlador serán:
-
-- showProducts: Devuelve la vista con todos los productos.
-- showProductById: Devuelve la vista con el detalle de un producto.
-- showNewProduct: Devuelve la vista con el formulario para subir un artículo nuevo.
-- createProduct: Crea un nuevo producto. Una vez creado, redirige a la vista de detalle del producto o a la vista de todos los productos del dashboard.
-- showEditProduct: Devuelve la vista con el formulario para editar un producto.
-- updateProduct: Actualiza un producto. Una vez actualizado, redirige a la vista de detalle del producto o a la vista de todos los productos del dashboard.
-- deleteProduct: Elimina un producto. Una vez eliminado, redirige a la vista de todos los productos del dashboard.
-
-Las funciones showProducts y showProductById pueden devolver respuestas ligeramente distintas si se llega desde el dashboard o desde la vista principal. Por ejemplo, si se llega desde el dashboard, se mostrará un enlace para editar o eliminar el producto. ***PISTA:*** Para ello podemos utilizar la url de la petición o pasar al controlador un parámetro extra que indique si se llega desde el dashboard o no.
-
-Para generar el html de forma más eficiente y sacarlo de la lógica, podemos crear funciones y variables auxiliares que generen el html de los productos y del formulario. Estas funciones se pueden meter en una carpeta llamada ***helpers***.
-Por ejemplo:
-- baseHtml: html común a todas las páginas. Puede contener elementos como la importación de estilos, etc.
-- getNavBar: Genera la barra de navegación con las categorías. En caso de estar en el dashboard, también generará un enlace para subir un nuevo producto.
-- getProductCards: Genera el html de los productos. Recibe un array de productos y devuelve el html de las tarjetas de los productos.
-- ...
-
-Un ejemplo de una función para generar el html de los productos podría ser:
-
-```javascript
-function getProductCards(products) {
-  let html = '';
-  for (let product of products) {
-    html += `
-      <div class="product-card">
-        <img src="${product.image}" alt="${product.name}">
-        <h2>${product.name}</h2>
-        <p>${product.description}</p>
-        <p>${product.price}€</p>
-        <a href="/products/${product._id}">Ver detalle</a>
-      </div>
-    `;
-  }
-  return html;
-}
+```
+npm run dev
 ```
 
-Con estas funciones auxiliares, el controlador será más limpio y fácil de entender.
-Ejemplo:
+O con Node:
 
-```javascript
-
-const showProducts = async (req, res) => {
-  const products = await Product.find();
-  const productCards = getProductCards(products);
-  const html = baseHtml + getNavBar() + productCards;
-  res.send(html);
-};
-    
+```
+npm run start
 ```
 
-## Despliegue
+---
 
-Creamos un nuevo proyecto en render y desplegamos el proyecto desde github. Recordad añadir las variables de entorno en render. Si no aparece el repositorio en render, tendremos que modificar los permisos de render para que pueda acceder al repositorio.
+## Variables de entorno
 
-## Documentación
+Crear archivo `.env` con:
 
-Crearemos un archivo `README.md` que contenga la documentación del proyecto. En este readme explicaremos cómo poner en marcha la aplicación, las tecnologías que hemos usado, endpoints, etc. En definitiva, una documentación de nuestra API.
-
-## PISTA
-Los formularios solo permiten metodos GET y POST. Sieres hacer otra petición de envío (DELETE, PUT...) tendrás que usar [Method Override](https://www.npmjs.com/package/method-override)
-
-```js
-const methodOverride = require('method-override');
-app.use(methodOverride('_method')); // leerá ?_method=PUT/DELETE
 ```
-Para hacer que el form sepa que no vamos a usar el POST sino el DELETE, se hará de la siguiente manera
+PORT=3001
+MONGO_URI=tu_uri_de_mongodb_atlas
 
-```js
-<form action="/products/<ID a eliminar>?_method=DELETE" method="POST"> // vemos que el metodo POST pero con ?_method=DELETE lo cambia y podemos acceder a la ruta DELETE. Puedes hacer lo mismo con PUT. 
-  <button type="submit">Eliminar</button>
-</form>
-```
-La ruta recibirá el ID en params
-
-```js
-// DELETE /products/:id
-router.delete('/products/:id', async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
-  res.redirect('/products');                      // vuelve a la lista
-});
+CLOUDINARY_CLOUD_NAME=tu_cloud_name
+CLOUDINARY_API_KEY=tu_api_key
+CLOUDINARY_API_SECRET=tu_api_secret
 ```
 
-## BONUS
-## Bonus 1 - API (OBLIGATORIO)
+---
 
-Para poder usar la aplicación con un frontend en React, vamos a crear una API que haga las mismas operaciones que el controlador de productos, pero que devuelva los datos en formato JSON. Piensa como deberían ser esas rutas y controladores.
+## Rutas principales
 
-## Bonus 2 - Tests
+### Catálogo público
 
-Para poder comprobar que el controlador de productos funciona correctamente, vamos a crear tests para las funciones. Para ello, necesitaremos instalar el paquete `jest` y crear el archivo `productController.test.js` en la carpeta `test`. En este archivo, importaremos el controlador y crearemos los tests. Podemos hacer tests tanto para las funciones que devuelven html como para las funciones que crean, actualizan o eliminan productos...
+- GET /products
+- GET /products/:productId
 
-Para funciones normales con jest será suficiente, pero para los controladores necesitaremos `Supertest`. Supertest lo que hace es simular una conexión con BBDD si que llegue a añadir nada.
-[Jest + Supertest](jestsupertest.md)
+### Dashboard (admin)
 
-## Bonus 3 - Documentación con Swagger
+- GET /dashboard
+- GET /dashboard/new
+- POST /dashboard
+- GET /dashboard/:productId
+- GET /dashboard/:productId/edit
+- PUT /dashboard/:productId
+- DELETE /dashboard/:productId/delete
 
-Crearemos un usuario administrador para que pueda subir desde el dashboard más productos. Esas rutas deberán estar protegidas para que solo pueda entrar quien esté logado y pueda acceder a esos elementos para crearlos, verlos, actualizarlos y borrarlos. 
+---
 
-## Bonus 4 - Interpretación de login + middleware. Rutas protegidas
+## Modelo Product
 
-Crea un middleware para las rutas protegidas (dashboard), crearemos un usuario y clave única que irá en .env. 
-- Si se valida podrá entrar sino redireccionará de nuevo al login diciendo que no tiene acceso. 
-- Si intenta entrar en una ruta protegida también le devolverá al login.
+El modelo incluye los siguientes campos:
 
-Recuerda subir en producción en el paratado de variables de entorno estas también para que pueda funcionar.
+- name (String)
+- description (String)
+- image (String → URL de Cloudinary)
+- category (String → enum: camisetas | pantalones | sudaderas | accesorios)
+- size (String → enum: XS | S | M | L | XL)
+- price (Number)
 
-## Recursos
+---
 
-- [Express](https://expressjs.com/)
-- [Mongoose](https://mongoosejs.com/)
-- [Atlas](https://www.mongodb.com/cloud/atlas)
-- [Render](https://render.com/)
-- [dotenv](https://www.npmjs.com/package/dotenv)
-- [express.urlencoded](https://expressjs.com/en/api.html#express.urlencoded)
-- [multer](https://www.npmjs.com/package/multer)
-- [cloudinary](https://cloudinary.com/)
-- [Template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals)
-- [Guía de git en equipos](./git.md)
+## Subida de imágenes
 
-## La entrega del proyecto tenéis que mandarnos los siguiente:
-- URL del repositorio
-- URL de producción
-- MONGO_URI y resto de variables de entorno si fueran necesarias (user, password, PORT,...)
+La subida de imágenes se realiza mediante:
 
-Recuerda tener la IP abierta: Atlas -> network access -> IP Address 0.0.0.0/0 
- 
+- multer
+- multer-storage-cloudinary
+
+La URL final generada por Cloudinary se obtiene desde:
+
+```
+req.file.path
+```
+
+Y se guarda en la base de datos como valor del campo `image`.
+
+En la edición de producto:
+
+- Si no se sube nueva imagen, se mantiene la existente
+- Si se sube una nueva, se actualiza la URL
+
+---
+
+## Notas técnicas
+
+- Los formularios HTML solo permiten métodos GET y POST.
+- Para soportar PUT y DELETE se utiliza method-override.
+- La aplicación sirve archivos estáticos desde la carpeta `public`.
+
+---
+
+## Posibles mejoras futuras
+
+- Implementar autenticación y rutas protegidas
+- Añadir tests con Jest + Supertest
+- Documentación con Swagger
+
+---
+
+## Contexto del proyecto
+
+Este proyecto fue desarrollado como parte del **Project Break 2** del Bootcamp de Full-Stack Web Development, con un **plazo de 2 semanas** dedicadas exclusivamente al diseño, implementación y consolidación del backend.
+
+El objetivo principal fue afianzar conocimientos de **Node.js, Express, MongoDB y arquitectura MVC**, trabajando la organización de un proyecto backend real, la estructuración de rutas y controladores, la conexión con una base de datos en la nube (MongoDB Atlas) y la integración de servicios externos como **Cloudinary** para la gestión de imágenes.
+
+Durante este periodo se priorizó la correcta separación de responsabilidades (configuración, modelos, controladores, rutas y helpers), el uso de buenas prácticas en el manejo de formularios, middlewares y renderizado SSR, así como la construcción de una base sólida para futuras ampliaciones como autenticación o testing automatizado.

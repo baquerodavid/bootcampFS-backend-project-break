@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --backgroundLightColor: #E6E6E6;
+  --backgroundDarkColor: #333333;
+  --textDarkColor: #333333;
+  --textLightColor: #FFFFFF;
+  --primaryColor: #1976D2;
+  --primaryHoverColor: #0552aa;
+  --errorHoverColor: #d43333;
+  --heading1-size: 3rem;
+  --heading2-size: 2rem;
+  --heading3-size: 1.5rem;
+  --heading-weight: 700;
+  --text-large-size: 1.25rem;
+  --text-regular-size: 1rem;
+  --text-regular-weight: 400;
+  --text-bold-weight: 600;
+  --errorColor: #FF4E4E;
+  --warningColor: #FFC857;
+  --successColor: #4CC27B;
+}
+
+/* RESET CSS */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+margin: 0;
+padding: 0;
+border: 0;
+font-size: 100%;
+font: inherit;
+vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+display: block;
+}
+body {
+line-height: 1;
+}
+ol, ul {
+list-style: none;
+}
+blockquote, q {
+quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+content: '';
+content: none;
+}
+table {
+border-collapse: collapse;
+border-spacing: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* STYLES */
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--backgroundLightColor);
+  line-height: 1.25;
+}
+
+a {
+  text-decoration: none;
+}
+
+.navBar {
+  background-color: var(--backgroundDarkColor);
+  color: var(--textLightColor);
+  height: 4rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+}
+
+.navBar a {
+  color: var(--textLightColor);
+  font-size: var(--text-large-size);
+}
+
+.btn-create {
+  border: 2px solid var(--warningColor);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: var(--warningColor) !important;
+}
+
+a:hover {
+  opacity: .6;
+}
+
+main {
+  padding: 32px;
+  max-width: 100%;
+}
+
+h1 {
+  font-size: var(--heading1-size);
+  font-weight: var(--heading-weight);
+  color: var(--accentColor2);
+  text-align: center;
+}
+
+h2 {
+  font-size: var(--heading2-size);
+  font-weight: var(--heading-weight);
+  color: var(--accentColor2);
+  text-align: center;
+}
+
+h3 {
+  font-size: var(--heading3-size);
+  font-weight: var(--heading-weight);
+  color: var(--accentColor2);
+  text-align: center;
+}
+
+.container {
+  margin: auto;
+  width: 100%;
+}
+
+/* FORMS */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 24px 16px;
+  margin: 32px auto;
+  border-radius: 8px;
+  background: var(--textLightColor);
+  max-width: 420px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.form-delete {
+  width: 100%;
+}
+
+label {
+  font-size: var(--text-regular-size);
+  font-weight: var(--text-bold-weight);
+  margin-top: 12px;
+}
+
+input,
+textarea,
+select {
+  padding: 12px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--backgroundLightColor);
+  font-size: var(--text-regular-size);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primaryColor);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primaryColor);
+  text-align: center;
+  color: var(--textLightColor);
+  font-size: var(--text-large-size);
+  font-weight: var(--text-bold-weight);
+  cursor: pointer;
+}
+
+.cancel-btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  background: var(--errorColor);
+  text-align: center;
+  color: var(--textLightColor);
+  font-size: var(--text-large-size);
+  font-weight: var(--text-bold-weight);
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background: var(--errorHoverColor);
+}
+
+.btn:hover {
+  background: var(--primaryHoverColor);
+}
+
+.btn-secondary {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  border: 2px solid var(--primaryColor);
+  border-radius: 8px;
+  padding: 12px 24px;
+  text-align: center;
+  color: var(--primaryColor);
+  font-size: var(--text-large-size);
+  font-weight: var(--text-bold-weight);
+}
+
+/* PRODUCT CARDS */
+
+.containerCards {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.product-card, .product-detail {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  margin: 16px;
+  width: 300px;
+  min-height: 520px;
+  border-radius: 8px;
+  background: var(--textLightColor);
+}
+
+.product-detail {
+  padding: 48px 24px;
+  width: 450px;
+  min-height: 350px;
+}
+
+.priceCard {
+  font-size: var(--text-large-size);
+  font-weight: var(--text-bold-weight);
+}
+
+.sizeCard {
+  font-size: var(--text-large-size);
+}
+
+img {
+  height: 250px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.imgEditForm {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: auto;
+}
+
+/* FOOTER */
+
+footer {
+  font-size: var(--text-regular-size);
+  font-weight: var(--text-regular-weight);
+  width: 100%;
+  margin-top: 48px;
+}
+
+footer a {
+  text-decoration: none;
+  color: var(--textLightColor);
+}
+
+.footerContainer {
+  background: var(--backgroundDarkColor);
+  padding: 24px 16px;
+}
+
+.navBarFooter {
+  color: var(--textLightColor);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+}
+
+.secondaryFooterContainer {
+  background: rgba(0, 0, 0, 0.08);
+  padding: 24px;
+}
+
+.secondaryFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--textDarkColor);
+}
+
+.secondaryFooter a {
+  color: var(--textDarkColor);
+}
