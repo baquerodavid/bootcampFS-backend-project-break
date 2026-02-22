@@ -8,6 +8,7 @@ function footer() {
           <a href="/products?category=pantalones">Pantalones</a>
           <a href="/products?category=sudaderas">Sudaderas</a>
           <a href="/products?category=accesorios">Accesorios</a>
+          <a href="/api-docs" target="_blank">📘 API Docs</a>
         </nav>
       </div>
 

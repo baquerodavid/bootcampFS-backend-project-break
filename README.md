@@ -1,8 +1,10 @@
 # Project Break 2 (Backend) - Tienda de Ropa
 
-Aplicación backend desarrollada con **Node.js + Express + MongoDB Atlas** para gestionar una tienda de ropa con:
+Aplicación backend desarrollada con **Node.js + Express + MongoDB Atlas** para gestionar una tienda de ropa que incluye:
 
-- Catálogo público (renderizado SSR con template literals)
+- Renderizado SSR (Server-Side Rendering) con template literals
+- API REST en formato JSON
+- Documentación de la API con Swagger
 - Dashboard de administración
 - Subida de imágenes con Multer + Cloudinary
 
@@ -17,7 +19,9 @@ Aplicación backend desarrollada con **Node.js + Express + MongoDB Atlas** para 
 - [Requisitos](#requisitos)
 - [Instalación](#instalación)
 - [Variables de entorno](#variables-de-entorno)
-- [Rutas principales](#rutas-principales)
+- [Rutas principales (SSR)](#rutas-principales-ssr)
+- [API REST](#api-rest)
+- [Documentación con Swagger](#documentación-con-swagger)
 - [Modelo Product](#modelo-product)
 - [Subida de imágenes](#subida-de-imágenes)
 - [Notas técnicas](#notas-técnicas)
@@ -65,6 +69,8 @@ El renderizado se realiza en el servidor (SSR) utilizando **template literals**,
 - multer-storage-cloudinary
 - Cloudinary
 - HTML + CSS (SSR con template literals)
+- Swagger (OpenAPI 3.0)
+- swagger-ui-express
 
 ---
 
@@ -149,7 +155,7 @@ CLOUDINARY_API_SECRET=tu_api_secret
 
 ---
 
-## Rutas principales
+## Rutas principales (SSR)
 
 ### Catálogo público
 
@@ -165,6 +171,61 @@ CLOUDINARY_API_SECRET=tu_api_secret
 - GET /dashboard/:productId/edit
 - PUT /dashboard/:productId
 - DELETE /dashboard/:productId/delete
+
+---
+
+## API REST
+
+Además del renderizado SSR, la aplicación incluye una API REST que devuelve los datos en formato JSON.
+
+### Endpoints API
+
+- GET /api/products
+- GET /api/products/:productId
+- POST /api/products
+- PUT /api/products/:productId
+- DELETE /api/products/:productId/delete
+
+### Características
+
+- Soporte de filtrado por categoría mediante query params:
+  
+  GET /api/products?category=camisetas
+
+- Respuestas en formato JSON
+- Códigos de estado HTTP adecuados (200, 201, 404, 500)
+
+---
+
+## Documentación con Swagger
+
+La API está documentada utilizando **Swagger (OpenAPI 3.0)**.
+
+Permite:
+
+- Visualizar todos los endpoints
+- Probar peticiones directamente desde el navegador
+- Ver esquemas y modelos definidos (Product)
+
+Swagger documenta:
+
+- Componentes reutilizables (schemas)
+- Endpoints agrupados por recurso
+- Request bodies y responses
+- Códigos de estado HTTP
+
+### Acceso a la documentación
+
+En cualquier entorno (local o producción), la documentación está disponible en:
+
+```
+/api-docs
+```
+
+Por ejemplo:
+
+- Local: `http://localhost:3000/api-docs`
+- Producción: `https://bootcampfs-backend-project-break.onrender.com/api-docs`
 
 ---
 
@@ -215,7 +276,6 @@ En la edición de producto:
 
 - Implementar autenticación y rutas protegidas
 - Añadir tests con Jest + Supertest
-- Documentación con Swagger
 
 ---
 
@@ -225,4 +285,4 @@ Este proyecto fue desarrollado como parte del **Project Break 2** del Bootcamp d
 
 El objetivo principal fue afianzar conocimientos de **Node.js, Express, MongoDB y arquitectura MVC**, trabajando la organización de un proyecto backend real, la estructuración de rutas y controladores, la conexión con una base de datos en la nube (MongoDB Atlas) y la integración de servicios externos como **Cloudinary** para la gestión de imágenes.
 
-Durante este periodo se priorizó la correcta separación de responsabilidades (configuración, modelos, controladores, rutas y helpers), el uso de buenas prácticas en el manejo de formularios, middlewares y renderizado SSR, así como la construcción de una base sólida para futuras ampliaciones como autenticación o testing automatizado.
+Durante este periodo se priorizó la correcta separación de responsabilidades (configuración, modelos, controladores, rutas y helpers), el uso de buenas prácticas en el manejo de formularios, middlewares, renderizado SSR y la construcción de una API REST documentada con Swagger, así como la construcción de una base sólida para futuras ampliaciones como autenticación o testing automatizado.

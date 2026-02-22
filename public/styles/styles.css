@@ -270,12 +270,14 @@ select:focus {
   min-height: 520px;
   border-radius: 8px;
   background: var(--textLightColor);
+  text-align: center;
 }
 
 .product-detail {
   padding: 48px 24px;
   width: 450px;
   min-height: 350px;
+  text-align: center;
 }
 
 .priceCard {
