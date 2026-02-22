@@ -1,4 +1,4 @@
-function getProductCards(products) {
+function getProductCards(products, isDashboard) {
   let html = "";
   for (let product of products) {
     html += `
@@ -7,8 +7,10 @@ function getProductCards(products) {
         <h3>${product.name}</h3>
         <p class="descriptionCard">${product.description}</p>
         <p class="priceCard">${product.price}€</p>
-        <a href="/products/${product._id}" class="btn">Ver detalle</a>
-        <a href="/dashboard/${product._id}" class="btn">DASHBOARD</a>
+        ${
+          isDashboard
+            ? `<a href="/dashboard/${product._id}" class="btn">Ver detalle</a>`
+            : `<a href="/products/${product._id}" class="btn">Ver detalle</a>`}
       </div>
     `;
   }

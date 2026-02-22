@@ -6,12 +6,27 @@ const editProduct = require('../helpers/editProduct');
 const getProductDetails = require("../helpers/productDetails");
 
 const productController = {
-  showProducts: async (req, res) => {
+  showProducts: async (req, res, isDashboard = false ) => {
     try {
-      const products = await Product.find();
-      const productCards = getProductCards(products);
-      const containerCards = `<div class="containerCards">${productCards}</div>`;
-      const html = baseHtml(containerCards);
+      const { category } = req.query;
+      let products;
+
+      if (!req.query.category) {
+        products = await Product.find();
+      } else {
+        products = await Product.find({ category: req.query.category });
+      }
+
+      const productCards = getProductCards(products, isDashboard);
+      const containerCards = `${
+        isDashboard
+          ? `
+          <h1>Dashboard</h1>
+          <div class="containerCards">${productCards}</div>
+        `
+          : `<div class="containerCards">${productCards}</div>`
+      }`;
+      const html = baseHtml(containerCards, category);
       res.send(html);
     } catch (error) {
       console.error(error);

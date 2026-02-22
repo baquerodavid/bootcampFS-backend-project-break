@@ -98,15 +98,28 @@ a {
   font-size: var(--text-large-size);
 }
 
-.btn-create {
+.btn-primary-nav {
+  border: none;
+  border-radius: 8px;
+  background: var(--warningColor);
+  padding: 8px 16px;
+  color: var(--textDarkColor) !important;
+}
+
+.btn-secondary-nav {
   border: 2px solid var(--warningColor);
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 6px 14px;
   color: var(--warningColor) !important;
 }
 
 a:hover {
   opacity: .6;
+}
+
+.navBar a.selected {
+  color: var(--primaryColor);
+  font-weight: 600;
 }
 
 main {
@@ -241,6 +254,7 @@ select:focus {
   align-items: center;
   justify-content: center;
   gap: 24px;
+  margin: 24px;
 }
 
 .product-card, .product-detail {
@@ -294,7 +308,6 @@ footer {
   font-size: var(--text-regular-size);
   font-weight: var(--text-regular-weight);
   width: 100%;
-  margin-top: 48px;
 }
 
 footer a {

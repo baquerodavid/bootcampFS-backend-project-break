@@ -4,10 +4,10 @@ function footer() {
       <div class="footerContainer">
         <nav class="navBarFooter">
           <a href="/products">Productos</a>
-          <a href="#">Camisetas</a>
-          <a href="#">Pantalones</a>
-          <a href="#">Sudaderas</a>
-          <a href="#">Accesorios</a>
+          <a href="/products?category=camisetas">Camisetas</a>
+          <a href="/products?category=pantalones">Pantalones</a>
+          <a href="/products?category=sudaderas">Sudaderas</a>
+          <a href="/products?category=accesorios">Accesorios</a>
         </nav>
       </div>
 

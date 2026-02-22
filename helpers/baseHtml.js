@@ -1,7 +1,7 @@
 const navBar = require("./navBar");
 const footer = require("./footer");
 
-function baseHtml(content) {
+function baseHtml(content, category) {
   const baseHtml = `
     <!DOCTYPE html>
     <html lang="es">
@@ -12,7 +12,7 @@ function baseHtml(content) {
         <title>Tienda online</title>
       </head>
       <body>
-        ${navBar()}
+        ${navBar(category)}
         <main>
           ${content}
         </main>

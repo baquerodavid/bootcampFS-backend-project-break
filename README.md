@@ -22,7 +22,7 @@ Aplicación backend desarrollada con **Node.js + Express + MongoDB Atlas** para 
 - [Subida de imágenes](#subida-de-imágenes)
 - [Notas técnicas](#notas-técnicas)
 - [Posibles mejoras futuras](#posibles-mejoras-futuras)
-- [Contexto del proyecto](#️contexto-del-proyecto)
+- [Contexto del proyecto](#contexto-del-proyecto)
 
 ---
 
